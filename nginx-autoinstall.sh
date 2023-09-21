@@ -747,11 +747,11 @@ case $OPTION in
  	# NJS
 	if [[ $NJS == 'y' ]]; then
 		cd /usr/local/src/nginx/modules || exit 1
-		hg clone --rev ${NJS_COMMIT} http://hg.nginx.org/njs \
+		hg clone --rev ${NJS_COMMIT} http://hg.nginx.org/njs
   		cd njs
-    		./configure \
-      		make njs \
-		mv /usr/local/src/nginx/modules/njs/build/njs /usr/local/src/nginx/modules/njs \
+    		./configure
+      		make njs
+		mv /usr/local/src/nginx/modules/njs/build/njs /usr/local/src/nginx/modules/njs
 		
 		NGINX_MODULES=$(
 			echo "$NGINX_MODULES"
