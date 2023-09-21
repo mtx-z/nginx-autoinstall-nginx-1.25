@@ -144,8 +144,8 @@ case $OPTION in
 		while [[ $HPACK != "y" && $HPACK != "n" ]]; do
 			read -rp "       Cloudflare's full HPACK encoding patch [y/n]: " -e -i n HPACK
 		done
-		while [[ $PAGESPEED != "y" && $PAGESPEED != "n" ]]; do
-			read -rp "       PageSpeed $NPS_VER [y/n]: " -e -i n PAGESPEED
+		while [[ $EED != "y" && $EED != "n" ]]; do
+			read -rp "       eed $NPS_VER [y/n]: " -e -i n EED
 		done
 		while [[ $BROTLI != "y" && $BROTLI != "n" ]]; do
 			read -rp "       Brotli [y/n]: " -e -i n BROTLI
@@ -265,16 +265,28 @@ case $OPTION in
 	fi
 
 	# PageSpeed
+	#if [[ $PAGESPEED == 'y' ]]; then
+	#	cd /usr/local/src/nginx/modules || exit 1
+	#	wget https://github.com/pagespeed/ngx_pagespeed/archive/v${NPS_VER}-stable.zip
+	#	unzip v${NPS_VER}-stable.zip
+	#	cd incubator-pagespeed-ngx-${NPS_VER}-stable || exit 1
+	#	psol_url=https://dl.google.com/dl/page-speed/psol/${NPS_VER}.tar.gz
+	#	[ -e scripts/format_binary_url.sh ] && psol_url=$(scripts/format_binary_url.sh PSOL_BINARY_URL)
+	#	wget "${psol_url}"
+	#	tar -xzvf "$(basename "${psol_url}")"
+	#	wget https://raw.githubusercontent.com/apache/incubator-pagespeed-ngx/master/src/ngx_pagespeed.cc -O ../incubator-pagespeed-ngx-${NPS_VER}-stable/src/ngx_pagespeed.cc
+	#fi
+
+ 	# PageSpeed https://github.com/apache/incubator-pagespeed-ngx/issues/1760
 	if [[ $PAGESPEED == 'y' ]]; then
+ 		PSOL="jammy"
 		cd /usr/local/src/nginx/modules || exit 1
-		wget https://github.com/pagespeed/ngx_pagespeed/archive/v${NPS_VER}-stable.zip
-		unzip v${NPS_VER}-stable.zip
-		cd incubator-pagespeed-ngx-${NPS_VER}-stable || exit 1
-		psol_url=https://dl.google.com/dl/page-speed/psol/${NPS_VER}.tar.gz
-		[ -e scripts/format_binary_url.sh ] && psol_url=$(scripts/format_binary_url.sh PSOL_BINARY_URL)
-		wget "${psol_url}"
-		tar -xzvf "$(basename "${psol_url}")"
-		wget https://raw.githubusercontent.com/apache/incubator-pagespeed-ngx/master/src/ngx_pagespeed.cc -O ../incubator-pagespeed-ngx-${NPS_VER}-stable/src/ngx_pagespeed.cc
+ 	 	mkdir -p build-pagespeed
+    		cd build-pagespeed
+		wget http://www.tiredofit.nl/psol-${PSOL}.tar.xz
+		git clone --depth=1 https://github.com/apache/incubator-pagespeed-ngx.git
+		tar xvf psol-${PSOL}.tar.xz
+		mv psol incubator-pagespeed-ngx
 	fi
 
 	#Brotli
@@ -674,13 +686,13 @@ case $OPTION in
 		curl -sSf https://sh.rustup.rs | sh -s -- -y
 		source "$HOME/.cargo/env"
 
-		cd /usr/local/src/nginx/nginx-${NGINX_VER} || exit 1
-		# Apply actual patch
-		patch -p01 </usr/local/src/nginx/modules/quiche/nginx/nginx-1.16.patch
+          	cd /usr/local/src/nginx/nginx-${NGINX_VER} || exit 1
+	 	# Apply actual patch
+	 	#patch -p01 </usr/local/src/nginx/modules/quiche/nginx/nginx-1.16.patch
 
-		# Apply patch for nginx > 1.19.7 (source: https://github.com/cloudflare/quiche/issues/936#issuecomment-857618081)
-		wget https://raw.githubusercontent.com/MaximeMichaud/nginx-autoinstall/master/patches/nginx-http3-1.19.7.patch -O nginx-http3.patch
-		patch -p01 <nginx-http3.patch
+	 	# Apply patch for nginx > 1.19.7 (source: https://github.com/cloudflare/quiche/issues/936#issuecomment-857618081)
+	 	#wget https://raw.githubusercontent.com/MaximeMichaud/nginx-autoinstall/master/patches/nginx-http3-1.19.7.patch -O nginx-http3.patch
+	 	#patch -p01 <nginx-http3.patch
 
 		NGINX_OPTIONS=$(
 			echo "$NGINX_OPTIONS"
