@@ -22,6 +22,7 @@ LUA_RESTYLRUCACHE_VER=${LUA_RESTYLRUCACHE_VER:-0.13}
 NGINX_DEV_KIT=${NGINX_DEV_KIT:-0.3.2}
 HTTPREDIS_VER=${HTTPREDIS_VER:-0.3.10}
 NGXECHO_VER=${NGXECHO_VER:-0.62}
+DEL_TEMPORARY=${DEL_TEMPORARY:-n}
 # https://github.com/macbre/docker-nginx-http3/blob/master/Dockerfile
 BORINGSSL_COMMIT=${BORINGSSL_COMMIT:-e1b8685770d0e82e5a4a3c5d24ad1602e05f2e83}
 NJS_COMMIT=${NJS_COMMIT:-a387eed79b90}
@@ -88,6 +89,7 @@ if [[ $HEADLESS == "y" ]]; then
 	RM_LOGS=${RM_LOGS:-n}
 	BORING_SSL=${BORING_SSL:-y}
 	NJS=${NJS:-y}
+	DEL_TEMPORARY=${DEL_TEMPORARY:-n}
 fi
 
 # Clean screen before launching menu
@@ -830,7 +832,9 @@ case $OPTION in
 	fi
 
 	# Removing temporary Nginx and modules files
-	rm -r /usr/local/src/nginx
+	 if [[ $DEL_TEMPORARY == 'y' ]]; then
+		rm -r /usr/local/src/nginx
+	 fi
 
 	# We're done !
 	echo "Installation done."
