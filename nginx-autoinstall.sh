@@ -715,14 +715,19 @@ case $OPTION in
 
  	# BORING SSL
 	if [[ $BORING_SSL == 'y' ]]; then
+ 		apt-get install -y golang
+		# Rust is not packaged so that's the only way...
+		curl -sSf https://sh.rustup.rs | sh -s -- -y
+		source "$HOME/.cargo/env"
+  
 		cd /usr/local/src/nginx/modules || exit 1
-		git clone https://github.com/google/boringssl \
+		git clone https://github.com/google/boringssl
   		cd boringssl
     		git checkout $BORINGSSL_COMMIT
     		cd /usr/local/src/nginx/modules/boringssl || exit 1
-      		mkdir build \
-		cd build \
-  		cmake -GNinja .. \
+      		mkdir build 
+		cd build
+  		cmake -GNinja ..
     		ninja
 		
 		NGINX_OPTIONS=$(
