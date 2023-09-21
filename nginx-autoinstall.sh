@@ -22,8 +22,14 @@ LUA_RESTYLRUCACHE_VER=${LUA_RESTYLRUCACHE_VER:-0.13}
 NGINX_DEV_KIT=${NGINX_DEV_KIT:-0.3.2}
 HTTPREDIS_VER=${HTTPREDIS_VER:-0.3.10}
 NGXECHO_VER=${NGXECHO_VER:-0.62}
+# https://github.com/macbre/docker-nginx-http3/blob/master/Dockerfile
+BORINGSSL_COMMIT=${BORINGSSL_COMMIT:-e1b8685770d0e82e5a4a3c5d24ad1602e05f2e83}
+NJS_COMMIT=${NJS_COMMIT:-a387eed79b90}
+
+
 # Define options
 NGINX_OPTIONS=${NGINX_OPTIONS:-"
+	--build=nginx-$NGINX_MAINLINE_VER-avpws-quic-$NGINX_COMMIT-boringssl-$BORINGSSL_COMMIT \
 	--prefix=/etc/nginx \
 	--sbin-path=/usr/sbin/nginx \
 	--conf-path=/etc/nginx/nginx.conf \
@@ -34,8 +40,8 @@ NGINX_OPTIONS=${NGINX_OPTIONS:-"
 	--http-client-body-temp-path=/var/cache/nginx/client_temp \
 	--http-proxy-temp-path=/var/cache/nginx/proxy_temp \
 	--http-fastcgi-temp-path=/var/cache/nginx/fastcgi_temp \
-	--user=nginx \
-	--group=nginx \
+	--user=nginx-fpm \
+	--group=nginx-fpm \
 	--with-cc-opt=-Wno-deprecated-declarations \
 	--with-cc-opt=-Wno-ignored-qualifiers"}
 # Define modules
@@ -78,8 +84,10 @@ if [[ $HEADLESS == "y" ]]; then
 	NGXECHO=${NGXECHO:-n}
 	HPACK=${HPACK:-n}
 	SSL=${SSL:-1}
-	RM_CONF=${RM_CONF:-y}
-	RM_LOGS=${RM_LOGS:-y}
+	RM_CONF=${RM_CONF:-n}
+	RM_LOGS=${RM_LOGS:-n}
+	BORING_SSL=${BORING_SSL:-y}
+	NJS=${NJS:-y}
 fi
 
 # Clean screen before launching menu
@@ -293,9 +301,9 @@ case $OPTION in
 	#Brotli
 	if [[ $BROTLI == 'y' ]]; then
 		cd /usr/local/src/nginx/modules || exit 1
-		git clone https://github.com/google/ngx_brotli
+		git clone --recurse-submodules https://github.com/google/ngx_brotli
 		cd ngx_brotli || exit 1
-		git submodule update --init
+		git submodule update --init  --depth 1
 	fi
 
 	# More Headers
@@ -702,6 +710,45 @@ case $OPTION in
 		NGINX_MODULES=$(
 			echo "$NGINX_MODULES"
 			echo --with-http_v3_module
+		)
+	fi
+
+ 	# BORING SSL
+	if [[ $BORING_SSL == 'y' ]]; then
+		cd /usr/local/src/nginx/modules || exit 1
+		git clone https://github.com/google/boringssl \
+  		cd boringssl
+    		git checkout $BORINGSSL_COMMIT
+    		cd /usr/local/src/nginx/modules/boringssl || exit 1
+      		mkdir build \
+		cd build \
+  		cmake -GNinja .. \
+    		ninja
+		
+		NGINX_OPTIONS=$(
+			echo "$NGINX_OPTIONS"
+			echo --with-cc-opt="-I/usr/local/src/nginx/modules/boringssl/include" \
+   			echo --with-ld-opt="-L/usr/local/src/nginx/modules/boringssl/build/ssl  \
+                     		-L/usr/local/src/nginx/modules/boringssl/build/crypto" \
+		)
+		NGINX_MODULES=$(
+			echo "$NGINX_MODULES"
+			echo --with-http_v3_module
+		)
+	fi
+
+ 	# NJS
+	if [[ $NJS == 'y' ]]; then
+		cd /usr/local/src/nginx/modules || exit 1
+		hg clone --rev ${NJS_COMMIT} http://hg.nginx.org/njs \
+  		cd njs
+    		./configure \
+      		make njs \
+		mv /usr/local/src/nginx/modules/njs/build/njs /usr/local/src/nginx/modules/njs \
+		
+		NGINX_MODULES=$(
+			echo "$NGINX_MODULES"
+			echo --add-module=/usr/local/src/nginx/modules/njs
 		)
 	fi
 
