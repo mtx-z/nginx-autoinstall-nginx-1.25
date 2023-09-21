@@ -782,7 +782,10 @@ case $OPTION in
 		export LUAJIT_INC=/usr/local/include/luajit-2.1/
 	fi
 
-	./configure $NGINX_OPTIONS $NGINX_MODULES
+ 	echo "Running from $(pwd)"
+	echo "./configure $NGINX_OPTIONS $NGINX_MODULES"
+
+ 	./configure $NGINX_OPTIONS $NGINX_MODULES
 	make -j "$(nproc)"
 	make install
 
