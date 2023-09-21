@@ -25,7 +25,7 @@ NGXECHO_VER=${NGXECHO_VER:-0.62}
 DEL_TEMPORARY=${DEL_TEMPORARY:-n}
 # https://github.com/macbre/docker-nginx-http3/blob/master/Dockerfile
 BORINGSSL_COMMIT=${BORINGSSL_COMMIT:-e1b8685770d0e82e5a4a3c5d24ad1602e05f2e83}
-NJS_COMMIT=${NJS_COMMIT:-a387eed79b90}
+NJS_COMMIT=${NJS_COMMIT:-a52b49f9afcf}
 
 
 # Define options
