@@ -782,6 +782,7 @@ case $OPTION in
 		export LUAJIT_INC=/usr/local/include/luajit-2.1/
 	fi
 
+	cd /usr/local/src/nginx/nginx-${NGINX_VER}
  	echo "Running from $(pwd)"
 	echo "./configure $NGINX_OPTIONS $NGINX_MODULES"
 
