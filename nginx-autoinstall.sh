@@ -747,6 +747,7 @@ case $OPTION in
  	# NJS
 	if [[ $NJS == 'y' ]]; then
 		cd /usr/local/src/nginx/modules || exit 1
+  		rm -rf /usr/local/src/nginx/modules/njs
 		hg clone --rev ${NJS_COMMIT} http://hg.nginx.org/njs
   		cd njs
     		./configure
