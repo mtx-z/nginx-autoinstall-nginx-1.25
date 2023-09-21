@@ -287,6 +287,7 @@ case $OPTION in
 		git clone --depth=1 https://github.com/apache/incubator-pagespeed-ngx.git
 		tar xvf psol-${PSOL}.tar.xz
 		mv psol incubator-pagespeed-ngx
+  		mv incubator-pagespeed-ngx /usr/local/src/nginx/modules
 	fi
 
 	#Brotli
