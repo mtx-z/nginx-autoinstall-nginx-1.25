@@ -734,8 +734,7 @@ case $OPTION in
 		NGINX_OPTIONS=$(
 			echo "$NGINX_OPTIONS"
 			echo --with-cc-opt="-I/usr/local/src/nginx/modules/boringssl/include"
-   			echo --with-ld-opt="-L/usr/local/src/nginx/modules/boringssl/build/ssl \
-                     		-L/usr/local/src/nginx/modules/boringssl/build/crypto"
+   			echo --with-ld-opt="-L/usr/local/src/nginx/modules/boringssl/build/ssl -L/usr/local/src/nginx/modules/boringssl/build/crypto"
 		)
 		NGINX_MODULES=$(
 			echo "$NGINX_MODULES"
