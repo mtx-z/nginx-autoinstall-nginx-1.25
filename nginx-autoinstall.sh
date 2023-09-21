@@ -30,7 +30,6 @@ NJS_COMMIT=${NJS_COMMIT:-a52b49f9afcf}
 
 # Define options
 NGINX_OPTIONS=${NGINX_OPTIONS:-"
-	--build=nginx-$NGINX_MAINLINE_VER-avpws-quic-$NGINX_COMMIT-boringssl-$BORINGSSL_COMMIT \
 	--prefix=/etc/nginx \
 	--sbin-path=/usr/sbin/nginx \
 	--conf-path=/etc/nginx/nginx.conf \
@@ -748,11 +747,11 @@ case $OPTION in
 	if [[ $NJS == 'y' ]]; then
 		cd /usr/local/src/nginx/modules || exit 1
   		rm -rf /usr/local/src/nginx/modules/njs
-		hg clone --rev ${NJS_COMMIT} http://hg.nginx.org/njs
+		hg clone http://hg.nginx.org/njs
   		cd njs
     		./configure
       		make njs
-		mv /usr/local/src/nginx/modules/njs/build/njs /usr/local/src/nginx/modules/njs
+		mv /usr/local/src/nginx/modules/njs/build/njs /usr/sbin/njs
 		
 		NGINX_MODULES=$(
 			echo "$NGINX_MODULES"
