@@ -783,9 +783,20 @@ case $OPTION in
 
 	cd /usr/local/src/nginx/nginx-${NGINX_VER}
  	echo "Running from $(pwd)"
-	echo "./configure $NGINX_OPTIONS $NGINX_MODULES"
 
- 	./configure $NGINX_OPTIONS $NGINX_MODULES
+   	# Remove line breaks and "\" characters
+    	command="./configure $NGINX_OPTIONS $NGINX_MODULES"
+	cleaned_command=$(echo "$command" | tr -d '\n' | tr -d '\\' | tr -s ' ')
+	cleaned_command=$(echo "$cleaned_command" | sed 's/ \+/ /g')
+	
+	# Display the cleaned command
+	echo "Refactored command:"
+	echo "$command"
+
+	# Execute the cleaned command
+	eval "$cleaned_command"
+
+ 	#./configure $NGINX_OPTIONS $NGINX_MODULES
 	make -j "$(nproc)"
 	make install
 
