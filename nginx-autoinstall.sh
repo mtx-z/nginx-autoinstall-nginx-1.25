@@ -87,7 +87,7 @@ if [[ $HEADLESS == "y" ]]; then
 	RM_CONF=${RM_CONF:-n}
 	RM_LOGS=${RM_LOGS:-n}
 	BORING_SSL=${BORING_SSL:-y}
-	NJS=${NJS:-y}
+	NJS=${NJS:-n}
 	DEL_TEMPORARY=${DEL_TEMPORARY:-n}
 fi
 
