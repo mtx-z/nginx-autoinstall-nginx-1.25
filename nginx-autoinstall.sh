@@ -786,7 +786,7 @@ case $OPTION in
 
    	# Remove line breaks and "\" characters
     	command="./configure $NGINX_OPTIONS $NGINX_MODULES"
-	cleaned_command=$(echo "$command" | tr -d '\n' | tr -d '\\' | tr -s ' ')
+ 	cleaned_command=$(echo "$command" | tr -d '\\' | tr -s ' ' | tr '\n' ' ')
 	cleaned_command=$(echo "$cleaned_command" | sed 's/ \+/ /g')
 	
 	# Display the cleaned command
