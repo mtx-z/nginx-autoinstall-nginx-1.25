@@ -736,9 +736,9 @@ case $OPTION in
 			echo "--with-cc-opt=\"-I/usr/local/src/nginx/modules/boringssl/include\""
    			echo "--with-ld-opt=\"-L/usr/local/src/nginx/modules/boringssl/build/ssl -L/usr/local/src/nginx/modules/boringssl/build/crypto\""
 		)
+  		#removed echo --with-http_v3_module
 		NGINX_MODULES=$(
 			echo "$NGINX_MODULES"
-			echo --with-http_v3_module
 		)
 	fi
 
