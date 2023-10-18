@@ -708,9 +708,9 @@ case $OPTION in
 			echo "$NGINX_OPTIONS"
 			echo --with-openssl=/usr/local/src/nginx/modules/quiche/quiche/deps/boringssl --with-quiche=/usr/local/src/nginx/modules/quiche
 		)
+  		#removed "echo --with-http_v3_module" as now included
 		NGINX_MODULES=$(
 			echo "$NGINX_MODULES"
-			echo --with-http_v3_module
 		)
 	fi
 
