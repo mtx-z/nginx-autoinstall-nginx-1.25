@@ -791,7 +791,7 @@ case $OPTION in
 	
 	# Display the cleaned command
 	echo "Refactored command:"
-	echo "$command"
+	echo "$cleaned_command"
 
 	# Execute the cleaned command
 	eval "$cleaned_command"
